@@ -1,0 +1,208 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Manash's Observatory</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--void:#02030a;--ice:#eef3ff;--dim:#b4c1e2;--amber:#ffb561;--teal:#6fe0ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--void);color:var(--ice);font:400 17px/1.7 Inter,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.65));pointer-events:none;z-index:4}
+#neb{position:fixed;inset:0;z-index:-2}#sky{position:fixed;inset:0;z-index:-1}
+#cur{position:fixed;left:0;top:0;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(255,181,97,.14),rgba(111,224,255,.05) 50%,transparent 70%);pointer-events:none;z-index:0;mix-blend-mode:screen}
+#planet{position:absolute;right:-8vw;top:12vh;width:min(52vw,560px);aspect-ratio:1;border-radius:50%;overflow:hidden;z-index:0;background:radial-gradient(circle at 32% 30%,#ffe2b0,#e8934f 25%,#8a4430 55%,#2a1015 85%);box-shadow:0 0 90px 10px rgba(255,150,70,.3),0 0 260px rgba(255,110,50,.2);will-change:transform}
+#planet i{position:absolute;inset:0;mix-blend-mode:overlay;opacity:.9;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.004 .045' numOctaves='5' seed='7'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .75  0 0 0 0 .5  0 0 0 2.2 -.7'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>") 0 0/600px 100%;animation:spin 120s linear infinite}
+#planet::after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:inset -80px -50px 140px rgba(0,0,0,.96),inset 14px 10px 50px rgba(255,215,160,.45),inset 0 0 30px rgba(255,170,100,.4)}
+@keyframes spin{to{background-position-x:-600px}}
+section{min-height:100vh;padding:14vh 6vw 10vh;position:relative}
+.w{max-width:780px;position:relative;z-index:1}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.025));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:clamp(1.4rem,4vw,2.8rem);box-shadow:0 30px 90px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 60px rgba(111,224,255,.05),0 0 70px rgba(111,224,255,.07);overflow:hidden;opacity:0;transform:translateY(46px) scale(.98);filter:blur(10px);transition:opacity 1.2s,transform 1.2s cubic-bezier(.2,.8,.2,1),filter 1.2s}
+.glass.in{opacity:1;transform:none;filter:none}
+.glass::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,190,120,.2),transparent 50%)}
+h1,h2{font:600 clamp(2.2rem,5.6vw,4.4rem)/1.05 Sora,system-ui,sans-serif;letter-spacing:-.035em;margin:0 0 .5em;color:#fff;text-shadow:0 0 28px rgba(255,181,97,.55),0 0 80px rgba(255,140,60,.25)}
+h2{font-size:clamp(1.8rem,4vw,3rem)}
+p{color:var(--dim);max-width:60ch}
+button{font:600 .95rem Inter,sans-serif;color:#fff;background:linear-gradient(135deg,rgba(255,181,97,.28),rgba(255,106,61,.12));border:1px solid rgba(255,200,140,.55);padding:.8em 1.6em;border-radius:99px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background .35s;box-shadow:0 0 24px rgba(255,160,80,.25),inset 0 1px 0 rgba(255,255,255,.3);backdrop-filter:blur(10px)}
+button:hover,button:focus-visible{transform:translateY(-3px);box-shadow:0 8px 40px rgba(255,160,80,.55),inset 0 1px 0 rgba(255,255,255,.4);outline:none}
+button:active{transform:scale(.96)}
+canvas.x{width:100%;height:auto;display:block;border-radius:22px;background:radial-gradient(circle,rgba(10,14,40,.7),rgba(0,0,8,.85));border:1px solid rgba(255,255,255,.14);box-shadow:0 0 60px rgba(255,150,70,.14),inset 0 0 50px rgba(0,0,0,.8);touch-action:none;margin:1.2em 0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9px;background:linear-gradient(90deg,rgba(111,224,255,.5),rgba(255,181,97,.6));box-shadow:0 0 16px rgba(111,224,255,.35);display:block;margin:1.3em 0;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd9a0);box-shadow:0 0 0 5px rgba(255,181,97,.25),0 0 28px 6px rgba(255,181,97,.8);cursor:grab}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border:0;border-radius:50%;background:radial-gradient(circle,#fff,#ffd9a0);box-shadow:0 0 0 5px rgba(255,181,97,.25),0 0 28px 6px rgba(255,181,97,.8)}
+.big{font:600 clamp(1.4rem,3.2vw,2.2rem)/1.15 Sora,sans-serif;letter-spacing:-.02em;color:var(--amber);text-shadow:0 0 24px rgba(255,181,97,.7);min-height:1.2em}
+.row{display:flex;gap:2.5rem;flex-wrap:wrap;margin:1em 0}.row b{display:block;font:600 1.7rem Sora,sans-serif;color:var(--teal);text-shadow:0 0 20px rgba(111,224,255,.7)}
+#hud{position:fixed;left:max(12px,env(safe-area-inset-left));top:calc(env(safe-area-inset-top,0px) + 10px);font-size:.78rem;color:var(--dim);z-index:5;pointer-events:none;padding:.5em 1.1em;border-radius:99px;background:rgba(10,14,32,.45);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+#snd{position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:5;padding:.45em 1.1em;font-size:.78rem}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,30px);width:min(580px,90vw);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(111,224,255,.5);padding:1.1em 1.4em;border-radius:20px;opacity:0;transition:.6s cubic-bezier(.2,.8,.2,1);z-index:9;pointer-events:none;box-shadow:0 0 70px rgba(111,224,255,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.sig{position:absolute;width:14px;height:14px;padding:0;border-radius:50%;border:0;background:#fff;box-shadow:0 0 14px 4px var(--teal),0 0 40px 10px rgba(111,224,255,.4);opacity:.25;animation:tw 4s infinite}
+.sig:hover,.sig:focus-visible{opacity:1;transform:scale(2.2)}.sig.f{opacity:0;pointer-events:none}
+@keyframes tw{50%{opacity:.07}}
+@media(max-width:700px){#planet{opacity:.55;top:4vh}}
+@media(prefers-reduced-motion:reduce){.sig,#planet i{animation:none}.glass{transition:opacity .3s;transform:none;filter:none}html{scroll-behavior:auto}}
+#snap{position:fixed;right:128px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:5;padding:.45em 1.1em;font-size:.78rem}
+#toast{z-index:40}label{display:block;margin-top:.7em;color:var(--dim);font-size:.92rem}
+#crop{display:none;position:fixed;inset:0;z-index:20;cursor:crosshair;background:rgba(0,0,0,.25);touch-action:none}
+#sel{display:none;position:fixed;border:2px solid var(--teal);box-shadow:0 0 0 9999px rgba(0,0,0,.5),0 0 24px var(--teal)}
+#pv{display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:4vw}
+#pv .glass{max-width:min(90vw,820px);max-height:90vh;overflow:auto;text-align:center}#pv img{max-width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.2)}
+@media(max-width:700px){#snap{right:12px;top:calc(env(safe-area-inset-top,0px) + 48px)}}
+</style></head><body>
+<div id="neb"></div><div id="cur"></div><div id="planet"><i></i></div><canvas id="sky"></canvas>
+<div id="hud">Distance travelled: <span id="dist">0</span> light-years · Anomalies found: <span id="cnt">0</span>/7</div>
+<button id="snap">Crop screenshot</button><button id="snd" aria-pressed="false">Sound: off</button>
+
+<section id="hero"><div class="w glass">
+<h1>The universe doesn't know you're here.</h1>
+<p>This is Manash's observatory: a small ship, a lot of dark, and a few experiments left running. Scroll to travel, or hold W to warp. Click anything that glows faintly. Not everything out here is on the map.</p>
+<button id="go">Wake the ship</button></div>
+<button class="sig" style="left:78%;top:62%" aria-label="faint signal" data-f="A day on Venus lasts longer than its year: it turns once in about 243 Earth days but circles the Sun in about 225."></button></section>
+
+<section id="scale"><div class="w glass">
+<h2>Drag through every size there is.</h2>
+<p>Each notch is ten times bigger than the last. Start at an atom. See how long you can keep going before the Universe runs out of edges.</p>
+<input id="sc" type="range" min="-10" max="27" step=".05" value="0" aria-label="Size in powers of ten">
+<div class="big" id="sn">you</div><p id="sf"></p>
+<div class="row"><div><b id="sm">10⁰ m</b>across</div><div><b id="st">0 s</b>for light to cross it</div></div></div>
+<button class="sig" style="left:12%;top:88%" aria-label="faint signal" data-f="A teaspoon of neutron-star matter would weigh roughly a billion tonnes."></button></section>
+
+<section id="bh"><div class="w glass">
+<h2>Fall toward it. Watch what happens to the clock.</h2>
+<p>Near a black hole, time runs slower for you than for everyone far away. Move the slider closer to the event horizon and let both clocks run.</p>
+<canvas class="x" id="bhc" width="760" height="420"></canvas>
+<input id="bd" type="range" min="-10" max="1.3" step=".01" value="1.3" aria-label="Distance from the horizon">
+<div class="big" id="bt"></div>
+<div class="row"><div><b id="c1">0 s</b>your clock</div><div><b id="c2">0 s</b>clock back home</div></div>
+<button id="mil">Go to Miller's planet</button> <button id="rst">Reset clocks</button></div>
+<button class="sig" style="left:88%;top:30%" aria-label="faint signal" data-f="Gravity slows time everywhere: your head ages very slightly faster than your feet."></button>
+<button class="sig" style="left:45%;top:93%" aria-label="faint signal" data-f="The black hole at the centre of the Perseus cluster hums a B-flat about 57 octaves below middle C."></button></section>
+
+<section id="wh"><div class="w glass">
+<h2>Hold to dive through the throat.</h2>
+<p>Steer with your pointer. Hold the button, the canvas, or the space bar. When the tunnel fills, you come out somewhere else.</p>
+<canvas class="x" id="whc" width="760" height="420"></canvas>
+<button id="dive">Hold to dive</button>
+<div class="big" id="wt">Between galaxies. Nothing yet.</div><p id="wf"></p></div>
+<button class="sig" style="left:6%;top:40%" aria-label="faint signal" data-f="Voyager 1 is more than 25 billion kilometres away and still sending data. It carries a golden record."></button></section>
+
+<section id="gv"><div class="w glass">
+<h2>Make your own gravity.</h2>
+<p>Drag on the canvas to throw a planet. Switch to star mode and click to plant a sun. Raise gravity until orbits tear apart.</p>
+<canvas class="x" id="gvc" width="760" height="460"></canvas>
+<button id="mode">Mode: throw planets</button> <button id="clr">Reset system</button>
+<label>Gravity<input id="G" type="range" min=".2" max="3" step=".05" value="1"></label></div>
+<button class="sig" style="left:52%;top:10%" aria-label="faint signal" data-f="Sunlight takes about 8 minutes to reach you, but tens of thousands of years or more to escape the Sun's core."></button></section>
+
+<section id="dk"><div class="w glass"><h2>Is anyone out there? Do the math.</h2><p>Frank Drake's equation estimates how many civilisations in our galaxy could be sending a signal. Every number is a guess. Move them and watch the answer swing.</p><div id="dkr"></div><div class="big" id="dkn"></div><p id="dkt"></p></div></section>
+<section id="end"><div class="w glass">
+<h2>Still here?</h2>
+<p>There are probably more stars in the observable universe than grains of sand on every beach on Earth. Somewhere in that, there may be someone asking the same questions about the dark.</p>
+<p id="fin"></p></div>
+<button class="sig" style="left:70%;top:55%" aria-label="faint signal" data-f="Light from the farthest galaxies has been travelling for over 13 billion years. You are reading ancient news."></button></section>
+<div id="crop"><div id="sel"></div></div><div id="pv"><div class="glass in"><img id="pvi" alt="Cropped screenshot"><p>Right-click or long-press the image to save it, or use the buttons.</p><a id="dl" download="cosmos-crop.png"><button>Download PNG</button></a> <button id="cp">Copy</button> <button id="cl">Close</button></div></div><div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let AC,master,muted=true,mx=0,my=0,warp=0;
+function audio(){if(AC)return;AC=new(window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=0;const f=AC.createBiquadFilter();f.frequency.value=240;[55,55.4,82.5].forEach(fr=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.value=fr;g.gain.value=.12;o.connect(g).connect(f);o.start()});f.connect(master);master.connect(AC.destination)}
+function blip(fr=660,d=.45){if(!AC||muted)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(fr,t);o.frequency.exponentialRampToValueAtTime(fr*1.5,t+d);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(AC.destination);o.start();o.stop(t+d)}
+function setSnd(on){audio();AC.resume();muted=!on;master.gain.setTargetAtTime(on?.3:0,AC.currentTime,.4);$('#snd').textContent='Sound: '+(on?'on':'off');$('#snd').setAttribute('aria-pressed',on)}
+$('#snd').onclick=()=>setSnd(muted);
+$('#go').onclick=()=>{setSnd(true);blip(440);$('#scale').scrollIntoView({behavior:'smooth'})};
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+/* starfield + nebula */
+const sky=$('#sky'),sx=sky.getContext('2d');let W,H,lastY=scrollY,sv=0;
+const rs=()=>{W=sky.width=innerWidth;H=sky.height=innerHeight};addEventListener('resize',rs);rs();
+const stars=Array.from({length:380},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:Math.random()*.98+.02,h:190+Math.random()*70}));
+let dist=0;
+function skyLoop(){sv+=((scrollY-lastY)-sv)*.1;lastY=scrollY;dist+=(Math.abs(sv)+warp)*.8;
+const v=.0004+(sv+warp)*(RM?.00005:.0007);sx.clearRect(0,0,W,H);sx.shadowColor='rgba(160,200,255,.95)';sx.shadowBlur=7;sx.globalCompositeOperation='lighter';
+for(const s of stars){s.z-=v;if(s.z<=.02||s.z>1){s.z=v>0?1:.03;s.x=Math.random()*2-1;s.y=Math.random()*2-1}
+const k=W*.09,x=W/2+s.x/s.z*k-mx*30*(1-s.z),y=H/2+s.y/s.z*k-my*30*(1-s.z),x0=W/2+s.x/(s.z+v*3)*k-mx*30*(1-s.z),y0=H/2+s.y/(s.z+v*3)*k-my*30*(1-s.z);
+sx.strokeStyle=`hsla(${s.h},70%,88%,${.25+.75*(1-s.z)})`;sx.lineWidth=.4+(1-s.z)*2;sx.beginPath();sx.moveTo(x0,y0);sx.lineTo(x,y);sx.stroke()}
+const p=scrollY/Math.max(1,document.body.scrollHeight-innerHeight),h=225+p*150;
+$('#neb').style.background=`radial-gradient(ellipse at ${20+p*50}% 30%,hsla(${h},70%,30%,.38),transparent 55%),radial-gradient(ellipse at ${85-p*40}% 75%,hsla(${h+70},70%,24%,.32),transparent 55%),#02030a`;
+$('#dist').textContent=Math.round(dist/40).toLocaleString();requestAnimationFrame(skyLoop)}skyLoop();
+/* hidden signals */
+let found=0;const tt=$('#toast');let tm;
+function toast(h){tt.innerHTML=h;tt.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>tt.classList.remove('on'),7000)}
+document.querySelectorAll('.sig').forEach(b=>b.onclick=()=>{b.classList.add('f');found++;$('#cnt').textContent=found;blip(520+found*90,.7);
+if(found==7){toast('<b>Signal decoded.</b> You were never small. You were the part of the universe that noticed.');$('#fin').textContent='All seven anomalies found. The universe noticed you noticing.'}else toast(b.dataset.f)});
+/* scale */
+const S=[[-10,'a hydrogen atom','Mostly empty space. The nucleus is about 100,000 times smaller than the atom.'],[-4,'a human hair','About 70 millionths of a metre wide.'],[0,'you','Roughly 10²⁸ atoms, most of them made in dead stars.'],[4,'Mount Everest','Barely a scratch on the skin of Earth.'],[7,'the Earth','Everyone you have ever met lives on this.'],[9,'the Sun','You could fit about 1.3 million Earths inside.'],[13,'the Solar System','Out to Neptune, and the edge is still far beyond.'],[16,'one light-year','About 9.46 trillion kilometres.'],[21,'the Milky Way','Hundreds of billions of stars.'],[23,'the Local Group','Our galaxy, Andromeda and dozens more, drifting together.'],[27,'the observable universe','About 93 billion light-years across. Beyond it: unknown.']];
+const U=[[1e-6,1e9,'nanoseconds'],[1e-3,1e6,'microseconds'],[1,1e3,'milliseconds'],[60,1,'seconds'],[3600,60,'minutes'],[86400,3600,'hours'],[3.15e7,86400,'days'],[1/0,3.156e7,'years']];
+const dur=t=>{for(const[l,d,n]of U)if(t<l)return(t*d<10?(t*d).toFixed(2):Math.round(t*d).toLocaleString())+' '+n};
+$('#sc').oninput=e=>{const x=+e.target.value;let b=S[0];for(const s of S)if(Math.abs(s[0]-x)<Math.abs(b[0]-x))b=s;
+$('#sn').textContent=b[1];$('#sf').textContent=b[2];$('#sm').textContent='10'+String(Math.round(x)).replace(/./g,c=>({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'})[c])+' m';
+$('#st').textContent=dur(Math.pow(10,x)/3e8);blip(200+(x+10)*18,.15)};$('#sc').oninput({target:$('#sc')});
+/* black hole */
+const bc=$('#bhc'),bx=bc.getContext('2d');let a=1.3,ship=0,earth=0,lt=0;
+$('#bd').oninput=e=>a=+e.target.value;$('#rst').onclick=()=>ship=earth=0;
+$('#mil').onclick=()=>{a=-9.57;$('#bd').value=a;blip(110,1)};
+const fd=s=>s<60?s.toFixed(1)+' s':s<3600?(s/60).toFixed(1)+' min':s<86400?(s/3600).toFixed(1)+' hours':s<3.15e7?(s/86400).toFixed(1)+' days':(s/3.156e7).toLocaleString(undefined,{maximumFractionDigits:1})+' years';
+function bhLoop(t){const dt=Math.min((t-lt)/1000,.1);lt=t;const r=1+Math.pow(10,a),f=Math.sqrt((r-1)/r);ship+=dt;earth+=dt/f;
+$('#c1').textContent=fd(ship);$('#c2').textContent=fd(earth);
+$('#bt').textContent=f>.999?'Far away. Clocks agree.':'1 hour for you = '+fd(3600/f).replace('.0','')+' outside';
+const c=bc,x=bx,cx=c.width/2,cy=c.height/2,R=34+(1-(a+10)/11.3)*70;x.clearRect(0,0,c.width,c.height);
+let g=x.createRadialGradient(cx,cy,R*.9,cx,cy,R*3.4);g.addColorStop(0,'rgba(255,170,80,.5)');g.addColorStop(1,'rgba(255,120,40,0)');x.fillStyle=g;x.fillRect(0,0,c.width,c.height);
+const dot=(i,front)=>{const m=i%40,ang=i*2.399+t*(.0003+.0007/(1+m*.15)),rr=R*(1.4+m/40*2.2),sn=Math.sin(ang);if(front!=(sn>0))return;const d=.5+.5*Math.cos(ang);
+const px=cx+Math.cos(ang)*rr,py=front?cy+sn*rr*.16:cy-(R*1.08+(rr-R*1.4)*.25)*Math.abs(sn);x.fillStyle=`hsla(${28+25*d},100%,${50+35*d}%,${.35+.5*d})`;x.fillRect(px,py,2.8,2.8);
+if(!front&&i%2){x.fillRect(px,cy+(py-cy)*-.55,1.6,1.6)}};
+x.globalCompositeOperation='lighter';x.shadowColor='#ff9a3c';x.shadowBlur=12;for(let i=0;i<720;i++)dot(i,false);x.globalCompositeOperation='source-over';x.shadowBlur=0;
+x.beginPath();x.arc(cx,cy,R,0,7);x.fillStyle='#000';x.fill();x.strokeStyle='rgba(255,200,120,.7)';x.lineWidth=1.5;x.stroke();
+x.globalCompositeOperation='lighter';x.shadowColor='#ff9a3c';x.shadowBlur=12;for(let i=0;i<720;i++)dot(i,true);x.globalCompositeOperation='source-over';x.shadowBlur=0;requestAnimationFrame(bhLoop)}requestAnimationFrame(bhLoop);
+/* wormhole */
+const wc=$('#whc'),wx=wc.getContext('2d');let dive=false,depth=0,wt=0,jumps=0,flash=0,hue=200;
+const GX=[['Andromeda','2.5 million light-years away, and it is falling toward the Milky Way at about 110 km/s.'],['the Sombrero Galaxy','Dusty ring, huge central bulge, about 29 million light-years from home.'],['Messier 87','Its black hole was the first ever photographed, in 2019.'],['the Triangulum Galaxy','The third-largest member of our Local Group.'],['the Large Magellanic Cloud','A satellite of the Milky Way, home to the bright supernova of 1987.']];
+const dv=on=>{dive=on;if(on)blip(90,1.2)};
+for(const el of[$('#dive'),wc]){el.onpointerdown=()=>dv(true);el.onpointerup=el.onpointerleave=()=>dv(false)}
+addEventListener('keydown',e=>{if(e.code=='Space'&&e.target==document.body){e.preventDefault();dive=true}});addEventListener('keyup',e=>{if(e.code=='Space')dive=false});
+wc.onpointermove=e=>{const r=wc.getBoundingClientRect();wc.mx=(e.clientX-r.left)/r.width-.5;wc.my=(e.clientY-r.top)/r.height-.5};
+function whLoop(){const w=wc.width,h=wc.height,sp=dive?.012:.0025;wt+=sp;if(dive)depth+=.004;else depth=Math.max(0,depth-.002);
+if(depth>=1){depth=0;flash=1;jumps++;hue=(hue+70)%360;const g=GX[jumps%GX.length];$('#wt').textContent='You emerged near '+g[0]+'.';$('#wf').textContent=g[1];blip(300,1.5)}
+wx.fillStyle='#02030a';wx.fillRect(0,0,w,h);const ox=(wc.mx||0)*120,oy=(wc.my||0)*80;
+let g=wx.createRadialGradient(w/2+ox,h/2+oy,0,w/2+ox,h/2+oy,90+depth*120);g.addColorStop(0,`hsla(${hue+90},90%,${60+depth*35}%,${.4+depth*.6})`);g.addColorStop(1,'transparent');wx.fillStyle=g;wx.fillRect(0,0,w,h);
+for(let i=0;i<34;i++){const p=(i/34+wt)%1,r=6+w*.6*p*p*p,k=1-p,cx=w/2+ox*k,cy=h/2+oy*k;wx.strokeStyle=`hsla(${hue+p*60},90%,62%,${.1+.7*p})`;wx.lineWidth=.5+p*3;wx.beginPath();wx.ellipse(cx,cy,r,r*.7,0,0,7);wx.stroke()}
+for(let i=0;i<18;i++){const an=i/18*6.283+wt*2;wx.strokeStyle=`hsla(${hue+30},80%,70%,.12)`;wx.beginPath();wx.moveTo(w/2+ox,h/2+oy);wx.lineTo(w/2+Math.cos(an)*w,h/2+Math.sin(an)*w*.7);wx.stroke()}
+if(flash>0){wx.fillStyle=`rgba(255,255,255,${flash})`;wx.fillRect(0,0,w,h);flash-=.02}requestAnimationFrame(whLoop)}whLoop();
+/* gravity sandbox */
+const gc=$('#gvc'),gx=gc.getContext('2d');let suns,pl,sMode=false,ds=null,cur=null;
+function init(){suns=[{x:380,y:230,m:900}];pl=[];for(let i=0;i<4;i++){const r=70+i*45;pl.push({x:380+r,y:230,vx:0,vy:Math.sqrt(900*+$('#G').value/r)*(i%2?-1:1),h:20+i*70,t:[]})}}init();
+$('#clr').onclick=init;$('#mode').onclick=e=>{sMode=!sMode;e.target.textContent='Mode: '+(sMode?'plant stars':'throw planets')};
+const pos=e=>{const r=gc.getBoundingClientRect();return{x:(e.clientX-r.left)*gc.width/r.width,y:(e.clientY-r.top)*gc.height/r.height}};
+gc.onpointerdown=e=>{ds=cur=pos(e)};gc.onpointermove=e=>{if(ds)cur=pos(e)};
+gc.onpointerup=e=>{if(!ds)return;const p=pos(e);if(sMode){if(suns.length<5)suns.push({x:p.x,y:p.y,m:600});blip(150,.6)}else{pl.push({x:ds.x,y:ds.y,vx:(ds.x-p.x)*.03,vy:(ds.y-p.y)*.03,h:Math.random()*360,t:[]});blip(700,.2);if(pl.length>60)pl.shift()}ds=null};
+function gvLoop(){const G=+$('#G').value;gx.fillStyle='rgba(2,3,10,.2)';gx.fillRect(0,0,gc.width,gc.height);
+for(const s of suns){const g=gx.createRadialGradient(s.x,s.y,0,s.x,s.y,40);g.addColorStop(0,'#fff');g.addColorStop(.25,'#ffd58a');g.addColorStop(1,'transparent');gx.fillStyle=g;gx.fillRect(s.x-40,s.y-40,80,80)}
+for(let n=0;n<3;n++)for(const p of pl){let ax=0,ay=0;for(const s of suns){const dx=s.x-p.x,dy=s.y-p.y,d2=dx*dx+dy*dy+100,k=G*s.m/(d2*Math.sqrt(d2));ax+=dx*k;ay+=dy*k;if(d2<260)p.dead=1}p.vx+=ax*.5;p.vy+=ay*.5;p.x+=p.vx*.5;p.y+=p.vy*.5}
+pl=pl.filter(p=>!p.dead&&Math.abs(p.x-380)<900&&Math.abs(p.y-230)<700);
+for(const p of pl){gx.fillStyle=`hsl(${p.h},90%,70%)`;gx.beginPath();gx.arc(p.x,p.y,2.6,0,7);gx.fill()}
+if(ds&&cur){gx.strokeStyle='rgba(111,224,255,.7)';gx.beginPath();gx.moveTo(ds.x,ds.y);gx.lineTo(cur.x,cur.y);gx.stroke()}requestAnimationFrame(gvLoop)}gvLoop();
+/* premium layer */
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.1});
+document.querySelectorAll('.glass').forEach(g=>{io.observe(g);g.onpointermove=e=>{const r=g.getBoundingClientRect();g.style.setProperty('--mx',e.clientX-r.left+'px');g.style.setProperty('--my',e.clientY-r.top+'px')}});
+const gl=$('#cur'),pn=$('#planet');let gx_=0,gy_=0,tx=innerWidth/2,ty=innerHeight/2;
+addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
+(function f(){gx_+=(tx-gx_)*.08;gy_+=(ty-gy_)*.08;gl.style.transform=`translate(${gx_-190}px,${gy_-190}px)`;pn.style.transform=`translate(${-mx*36}px,${scrollY*.28-my*24}px)`;requestAnimationFrame(f)})();
+/* v2 features */
+addEventListener('keydown',e=>{if(e.key=='w'&&e.target==document.body){warp=70;blip(120,.8)}});addEventListener('keyup',e=>{if(e.key=='w')warp=0});
+try{const sv=JSON.parse(localStorage.getItem('cosmosFound')||'[]');document.querySelectorAll('.sig').forEach((b,i)=>{if(sv.includes(i)){b.classList.add('f');found++}});$('#cnt').textContent=found}catch(e){}
+document.querySelectorAll('.sig').forEach((b,i)=>b.addEventListener('click',()=>{try{const a=JSON.parse(localStorage.getItem('cosmosFound')||'[]');if(!a.includes(i))a.push(i);localStorage.setItem('cosmosFound',JSON.stringify(a))}catch(e){}}));
+const DK=[['Stars born per year in the galaxy',1,10,.5,2,v=>v],['Share of stars with planets',0,1,.01,.9,v=>v],['Habitable planets per star',0,5,.1,.4,v=>v],['Share where life starts',0,1,.01,.1,v=>v],['Share that become intelligent',0,1,.001,.05,v=>v],['Share that send signals',0,1,.01,.1,v=>v],['Years a civilisation keeps signalling (power of ten)',2,8,.1,4,v=>Math.pow(10,v)]];
+$('#dkr').innerHTML=DK.map((d,i)=>`<label>${d[0]}: <b id="dv${i}" style="color:var(--teal)"></b><input type="range" min="${d[1]}" max="${d[2]}" step="${d[3]}" value="${d[4]}"></label>`).join('');
+function dk(){let n=1;document.querySelectorAll('#dkr input').forEach((k,i)=>{const v=DK[i][5](+k.value);n*=v;$('#dv'+i).textContent=v>=1000?v.toLocaleString():+v.toPrecision(3)});
+$('#dkn').textContent=n<1?'Fewer than 1 civilisation. We may be alone here.':'About '+(n<10?n.toFixed(1):Math.round(n).toLocaleString())+' signalling civilisations right now.';
+$('#dkt').textContent=n<1?'Even so, the galaxy holds hundreds of billions of stars, and there are hundreds of billions of galaxies.':'Space is huge, though: the nearest one could be thousands of light-years away.'}
+$('#dkr').oninput=dk;dk();
+const cr=$('#crop'),sel=$('#sel'),pv=$('#pv');let cs=null,lastC;
+const stop=()=>{cs=null;cr.style.display=sel.style.display='none'};
+$('#snap').onclick=()=>{cr.style.display='block';toast('Drag across the area you want to capture. Press Esc to cancel.')};
+cr.onpointerdown=e=>{cs={x:e.clientX,y:e.clientY};cr.setPointerCapture(e.pointerId)};
+cr.onpointermove=e=>{if(!cs)return;Object.assign(sel.style,{display:'block',left:Math.min(cs.x,e.clientX)+'px',top:Math.min(cs.y,e.clientY)+'px',width:Math.abs(e.clientX-cs.x)+'px',height:Math.abs(e.clientY-cs.y)+'px'})};
+cr.onpointerup=e=>{if(!cs)return;const x=Math.min(cs.x,e.clientX),y=Math.min(cs.y,e.clientY),w=Math.abs(e.clientX-cs.x),h=Math.abs(e.clientY-cs.y);stop();if(w>12&&h>12)shot(x,y,w,h)};
+addEventListener('keydown',e=>{if(e.key=='Escape'){stop();pv.style.display='none'}});
+function shot(x,y,w,h){const c=lastC=document.createElement('canvas');c.width=w;c.height=h;const t=c.getContext('2d');t.fillStyle='#02030a';t.fillRect(0,0,w,h);
+const g=t.createRadialGradient(w*.3,h*.3,0,w*.3,h*.3,Math.max(w,h));g.addColorStop(0,'rgba(60,70,160,.35)');g.addColorStop(1,'transparent');t.fillStyle=g;t.fillRect(0,0,w,h);
+t.drawImage(sky,x,y,w,h,0,0,w,h);document.querySelectorAll('canvas.x').forEach(k=>{const r=k.getBoundingClientRect();t.drawImage(k,0,0,k.width,k.height,r.left-x,r.top-y,r.width,r.height)});
+t.fillStyle='rgba(255,255,255,.55)';t.font='12px Inter,sans-serif';t.fillText("Manash's Observatory",12,h-12);
+const u=c.toDataURL('image/png');$('#pvi').src=u;$('#dl').href=u;pv.style.display='flex';blip(880,.3)}
+$('#cl').onclick=()=>pv.style.display='none';
+$('#cp').onclick=()=>lastC.toBlob(b=>navigator.clipboard.write([new ClipboardItem({'image/png':b})]).then(()=>toast('Copied to clipboard.')).catch(()=>toast('Copy is blocked here. Right-click the image to save it.')));
+</script></body></html>
